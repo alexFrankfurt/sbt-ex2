@@ -2,21 +2,20 @@ name := "initial"
 
 scalaVersion := "2.12.10"
 
-
 lazy val changeName = taskKey[StateTransform]("Changes project name")
 
 lazy val changeScalaVersion = taskKey[StateTransform]("Changes scala version")
 
 changeName := {
-  val st = state.value
-  val extracted = Project.extract(st)
-  new StateTransform(extracted.appendWithSession(Seq(name := "changed-name"), st))
+  StateTransform((s: State) => {
+    val extracted = Project.extract(s)
+    extracted.appendWithSession(Seq(name := "changed-name"), s)
+  })
 }
 
 changeScalaVersion := {
-  val st = state.value
-  val extracted = Project.extract(st)
-
-
-  new StateTransform(extracted.appendWithSession(Seq(scalaVersion := "2.13.1"), st))
+  StateTransform((s: State) => {
+    val extracted = Project.extract(s)
+    extracted.appendWithSession(Seq(scalaVersion := "2.13.1"), s)
+  })
 }
